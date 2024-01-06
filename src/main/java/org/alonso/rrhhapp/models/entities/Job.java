@@ -1,7 +1,5 @@
 package org.alonso.rrhhapp.models.entities;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -28,6 +26,5 @@ public class Job {
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JoinColumn(name = "department_id")
-    @JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
     private Department department;
 }

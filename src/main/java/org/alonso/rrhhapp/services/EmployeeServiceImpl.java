@@ -1,10 +1,14 @@
 package org.alonso.rrhhapp.services;
 
+import static org.alonso.rrhhapp.models.helpers.EmployeeHelper.buildEmployee;
+
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import org.alonso.rrhhapp.models.dto.CreateEmployeeDTO;
 import org.alonso.rrhhapp.models.dto.EmployeeDTO;
+import org.alonso.rrhhapp.models.dto.UpdateEmployeeDTO;
 import org.alonso.rrhhapp.models.entities.Address;
 import org.alonso.rrhhapp.models.entities.City;
 import org.alonso.rrhhapp.models.entities.Employee;
@@ -36,7 +40,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public List<EmployeeDTO> findAll() {
-        List<Employee> employees = (List<Employee>) employeeRepository.findAll();
+        List<Employee> employees = employeeRepository.findEmployees();
 
         return employees.stream()
                 .map((employee) -> buildEmployee(employee))
@@ -81,6 +85,38 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
+    public EmployeeDTO findById(Long id) {
+        Employee employee = employeeRepository.findOneById(id)
+                .orElseThrow(() -> new EmployeeNotFoundException("The employee entered is not found"));
+
+        return buildEmployee(employee);
+    }
+
+    @Override
+    public EmployeeDTO update(UpdateEmployeeDTO updateEmployeeDTO, Long id) {
+        Employee employee = employeeRepository.findOneById(id)
+                .orElseThrow(() -> new EmployeeNotFoundException("The employee entered is not found"));
+
+        employee.setName(updateEmployeeDTO.getName());
+        employee.setLastname(updateEmployeeDTO.getLastname());
+        employee.setPhone(updateEmployeeDTO.getPhone());
+
+        employee = employeeRepository.save(employee);
+        return buildEmployee(employee);
+    }
+
+    @Override
+    public EmployeeDTO delete(Long id) {
+        Employee employee = employeeRepository.findOneById(id)
+                .orElseThrow(() -> new EmployeeNotFoundException("The employee entered is not found"));
+
+        employee.setFiredate(LocalDate.now());
+        employee = employeeRepository.save(employee);
+
+        return buildEmployee(employee);
+    }
+
+    @Override
     public List<Job> findJobs() {
         return (List<Job>) jobRepository.findAll();
     }
@@ -88,31 +124,5 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public List<City> findCities() {
         return (List<City>) cityRepository.findAll();
-    }
-
-    private EmployeeDTO buildEmployee(Employee employee) {
-        Address addressDB = employee.getAddress();
-        StringBuilder address = new StringBuilder(addressDB.getStreet())
-                .append(" ")
-                .append(addressDB.getNumber())
-                .append(" ")
-                .append(addressDB.getCity().getName());
-
-        String boss = (employee.getBoss() != null)
-                ? employee.getBoss().getName() + " " + employee.getBoss().getLastname()
-                : null;
-
-        return EmployeeDTO.builder()
-                .id(employee.getId())
-                .name(employee.getName() + " " + employee.getLastname())
-                .email(employee.getEmail())
-                .phone(employee.getPhone())
-                .address(address.toString())
-                .boss(boss)
-                .job(employee.getJob().getName())
-                .department(employee.getJob().getDepartment().getName())
-                .birthdate(employee.getBirthdate())
-                .hiredate(employee.getHiredate())
-                .build();
     }
 }

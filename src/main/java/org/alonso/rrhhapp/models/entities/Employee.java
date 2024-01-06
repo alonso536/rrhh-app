@@ -2,8 +2,6 @@ package org.alonso.rrhhapp.models.entities;
 
 import java.time.LocalDate;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -44,17 +42,14 @@ public class Employee {
 
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JoinColumn(name = "address_id")
-    @JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
     private Address address;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JoinColumn(name = "job_id")
-    @JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
     private Job job;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JoinColumn(name = "boss_id", nullable = true)
-    @JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
     private Employee boss;
 
     private LocalDate birthdate;

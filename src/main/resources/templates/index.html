@@ -9,9 +9,10 @@
             <thead>
                 <tr>
                     <th>#</th>
-                    <th>Nombre</th>
+                    <th>Name</th>
                     <th>Email</th>
-                    <th>Telefono</th>
+                    <th>Phone</th>
+                    <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
@@ -20,6 +21,13 @@
                     <td th:text="${employee.name}"></td>
                     <td th:text="${employee.email}"></td>
                     <td th:text="${employee.phone}"></td>
+                    <td class="d-flex justify-content-evenly">
+                        <a class="btn btn-primary btn-sm" th:href="@{/show/} + ${employee.id}">Show</a>
+                        <a class="btn btn-success btn-sm" th:href="@{/edit/} + ${employee.id}">Edit</a>
+                        <form th:action="@{/destroy/} + ${employee.id}" method="POST" onsubmit="return confirm('Are you sure that want to delete this employee?')">
+                            <button class="btn btn-danger btn-sm">Delete</button>
+                        </form>
+                    </td>
                 </tr>
             </tbody>
         </table>
