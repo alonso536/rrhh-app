@@ -1,6 +1,7 @@
 package org.alonso.rrhhapp.services;
 
 import static org.alonso.rrhhapp.models.helpers.EmployeeHelper.buildEmployee;
+import static org.alonso.rrhhapp.models.helpers.EmployeeHelper.formatBirthdate;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -76,7 +77,7 @@ public class EmployeeServiceImpl implements EmployeeService {
                 .phone(createEmployeeDTO.getPhone())
                 .address(address)
                 .job(job)
-                .birthdate(createEmployeeDTO.getBirthdate())
+                .birthdate(formatBirthdate(createEmployeeDTO.getBirthdate()))
                 .boss(boss)
                 .build();
 
@@ -99,7 +100,9 @@ public class EmployeeServiceImpl implements EmployeeService {
 
         employee.setName(updateEmployeeDTO.getName());
         employee.setLastname(updateEmployeeDTO.getLastname());
+        employee.setEmail(updateEmployeeDTO.getEmail());
         employee.setPhone(updateEmployeeDTO.getPhone());
+        employee.setBirthdate(formatBirthdate(updateEmployeeDTO.getBirthdate()));
 
         employee = employeeRepository.save(employee);
         return buildEmployee(employee);

@@ -10,7 +10,7 @@
             <li class="list-group-item" th:text="'Email: ' + ${employee.email}"></li>
             <li class="list-group-item" th:text="'Phone: ' + ${employee.phone}"></li>
             <li class="list-group-item" th:text="'Address: ' + ${employee.address}"></li>
-            <li class="list-group-item" th:text="'Boss: ' + ${employee.boss}"></li>
+            <li class="list-group-item" th:if="${employee.boss != null}" th:text="'Boss: ' + ${employee.boss}"></li>
             <li class="list-group-item" th:text="'Job: ' + ${employee.job}"></li>
             <li class="list-group-item" th:text="'Department: ' + ${employee.department}"></li>
             <li class="list-group-item" th:text="'Birthdate: ' + ${employee.birthdate}"></li>
