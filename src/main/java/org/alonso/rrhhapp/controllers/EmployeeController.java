@@ -49,15 +49,15 @@ public class EmployeeController {
 
     @PostMapping("/store")
     public String store(@Valid CreateEmployeeDTO employee, BindingResult result, Model model) {
+        model.addAttribute("title", "Add Employee");
+        model.addAttribute("employee", employee);
+        model.addAttribute("jobs", employeeService.findJobs());
+        model.addAttribute("cities", employeeService.findCities());
+
         if (result.hasErrors()) {
             Map<String, String> errors = new HashMap<>();
             result.getFieldErrors().forEach(e -> errors.put(e.getField(), e.getDefaultMessage()));
-
-            model.addAttribute("title", "Add Employee");
             model.addAttribute("errors", errors);
-            model.addAttribute("employee", employee);
-            model.addAttribute("jobs", employeeService.findJobs());
-            model.addAttribute("cities", employeeService.findCities());
 
             return "create";
         }
@@ -65,12 +65,7 @@ public class EmployeeController {
         try {
             employeeService.save(employee);
         } catch (DataIntegrityViolationException e) {
-            model.addAttribute("title", "Add Employee");
             model.addAttribute("errors", Map.of("email", "The email entered is in use"));
-            model.addAttribute("employee", employee);
-            model.addAttribute("jobs", employeeService.findJobs());
-            model.addAttribute("cities", employeeService.findCities());
-
             return "create";
         }
 

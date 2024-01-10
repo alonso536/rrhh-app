@@ -23,6 +23,7 @@ import org.alonso.rrhhapp.repositories.EmployeeRepository;
 import org.alonso.rrhhapp.repositories.JobRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class EmployeeServiceImpl implements EmployeeService {
@@ -40,6 +41,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     private CityRepository cityRepository;
 
     @Override
+    @Transactional(readOnly = true)
     public List<EmployeeDTO> findAll() {
         List<Employee> employees = employeeRepository.findEmployees();
 
@@ -49,6 +51,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
+    @Transactional
     public EmployeeDTO save(CreateEmployeeDTO createEmployeeDTO) {
         Job job = jobRepository.findById(createEmployeeDTO.getJob())
                 .orElseThrow(() -> new JobNotFoundException("The job entered is not found"));
@@ -86,6 +89,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public EmployeeDTO findById(Long id) {
         Employee employee = employeeRepository.findOneById(id)
                 .orElseThrow(() -> new EmployeeNotFoundException("The employee entered is not found"));
@@ -94,6 +98,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
+    @Transactional
     public EmployeeDTO update(UpdateEmployeeDTO updateEmployeeDTO, Long id) {
         Employee employee = employeeRepository.findOneById(id)
                 .orElseThrow(() -> new EmployeeNotFoundException("The employee entered is not found"));
@@ -109,6 +114,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
+    @Transactional
     public EmployeeDTO delete(Long id) {
         Employee employee = employeeRepository.findOneById(id)
                 .orElseThrow(() -> new EmployeeNotFoundException("The employee entered is not found"));
@@ -120,12 +126,14 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<Job> findJobs() {
-        return (List<Job>) jobRepository.findAll();
+        return jobRepository.findAll();
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<City> findCities() {
-        return (List<City>) cityRepository.findAll();
+        return cityRepository.findAll();
     }
 }
