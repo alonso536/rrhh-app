@@ -22,6 +22,9 @@ import org.alonso.rrhhapp.repositories.CityRepository;
 import org.alonso.rrhhapp.repositories.EmployeeRepository;
 import org.alonso.rrhhapp.repositories.JobRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -48,6 +51,18 @@ public class EmployeeServiceImpl implements EmployeeService {
         return employees.stream()
                 .map((employee) -> buildEmployee(employee))
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Page<EmployeeDTO> findAll(Pageable page) {
+        List<EmployeeDTO> employees = employeeRepository.findEmployees(page)
+                .getContent()
+                .stream()
+                .map((employee) -> buildEmployee(employee))
+                .collect(Collectors.toList());
+
+        return new PageImpl<>(employees, page, 8);
     }
 
     @Override

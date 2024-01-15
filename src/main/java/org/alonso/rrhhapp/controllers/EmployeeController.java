@@ -75,7 +75,7 @@ public class EmployeeController {
     @GetMapping("/show/{id}")
     public String show(@PathVariable Long id, Model model) {
         EmployeeDTO employee = employeeService.findById(id);
-        model.addAttribute("title", employee.getName());
+        model.addAttribute("title", employee.getName() + " " + employee.getLastname());
         model.addAttribute("employee", employee);
 
         return "show";
@@ -94,19 +94,26 @@ public class EmployeeController {
     @PostMapping("/update/{id}")
     public String update(@Valid UpdateEmployeeDTO employee, BindingResult result, @PathVariable Long id,
             Model model) {
+
+        model.addAttribute("title", "Edit Employee");
+        model.addAttribute("employee", employee);
+        model.addAttribute("id", id);
+
         if (result.hasErrors()) {
             Map<String, String> errors = new HashMap<>();
             result.getFieldErrors().forEach(e -> errors.put(e.getField(), e.getDefaultMessage()));
-
-            model.addAttribute("title", "Edit Employee");
             model.addAttribute("errors", errors);
-            model.addAttribute("employee", employee);
-            model.addAttribute("id", id);
 
             return "edit";
         }
 
-        employeeService.update(employee, id);
+        try {
+            employeeService.update(employee, id);
+        } catch (DataIntegrityViolationException e) {
+            model.addAttribute("errors", Map.of("email", "The email entered is in use"));
+            return "edit";
+        }
+
         return "redirect:/index";
     }
 

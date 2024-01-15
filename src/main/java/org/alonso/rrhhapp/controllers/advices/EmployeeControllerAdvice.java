@@ -44,7 +44,16 @@ public class EmployeeControllerAdvice {
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public String handleMethodArgumentTypeMismatchException(MethodArgumentTypeMismatchException e, Model model) {
         model.addAttribute("title", "Error 404: Not found");
-        model.addAttribute("error", "The param is not valid");
+        model.addAttribute("error", "The id must be a number");
+
+        return "error";
+    }
+
+    @ExceptionHandler(Exception.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public String handleException(Exception e, Model model) {
+        model.addAttribute("title", "Error 500: Internal Server Error");
+        model.addAttribute("error", "An error has occurred. Talk to the administrator.");
 
         return "error";
     }
