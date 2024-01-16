@@ -28,6 +28,6 @@ public class UpdateEmployeeDTO {
     private String email;
 
     @NotNull(message = "The field phone is required")
-    @Pattern(regexp = "^[0-9]$", message = "The field phone must be a number")
+    @Pattern(regexp = "^[0-9]+$", message = "The field phone must be a number")
     private String phone;
 }

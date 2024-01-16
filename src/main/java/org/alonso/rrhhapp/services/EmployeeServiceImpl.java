@@ -15,6 +15,7 @@ import org.alonso.rrhhapp.models.entities.City;
 import org.alonso.rrhhapp.models.entities.Employee;
 import org.alonso.rrhhapp.models.entities.Job;
 import org.alonso.rrhhapp.models.exceptions.CityNotFoundException;
+import org.alonso.rrhhapp.models.exceptions.EmailUniqueException;
 import org.alonso.rrhhapp.models.exceptions.EmployeeNotFoundException;
 import org.alonso.rrhhapp.models.exceptions.JobNotFoundException;
 import org.alonso.rrhhapp.repositories.AddressRepository;
@@ -22,6 +23,7 @@ import org.alonso.rrhhapp.repositories.CityRepository;
 import org.alonso.rrhhapp.repositories.EmployeeRepository;
 import org.alonso.rrhhapp.repositories.JobRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -99,7 +101,12 @@ public class EmployeeServiceImpl implements EmployeeService {
                 .boss(boss)
                 .build();
 
-        employee = employeeRepository.save(employee);
+        try {
+            employee = employeeRepository.save(employee);
+        } catch (DataIntegrityViolationException e) {
+            throw new EmailUniqueException("The email entered is in use");
+        }
+
         return buildEmployee(employee);
     }
 
@@ -123,7 +130,12 @@ public class EmployeeServiceImpl implements EmployeeService {
         employee.setEmail(updateEmployeeDTO.getEmail());
         employee.setPhone(updateEmployeeDTO.getPhone());
 
-        employee = employeeRepository.save(employee);
+        try {
+            employee = employeeRepository.save(employee);
+        } catch (DataIntegrityViolationException e) {
+            throw new EmailUniqueException("The email entered is in use");
+        }
+
         return buildEmployee(employee);
     }
 

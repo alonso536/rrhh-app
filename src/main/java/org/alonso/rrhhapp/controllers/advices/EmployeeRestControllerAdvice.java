@@ -3,9 +3,11 @@ package org.alonso.rrhhapp.controllers.advices;
 import java.util.Arrays;
 
 import org.alonso.rrhhapp.models.exceptions.CityNotFoundException;
+import org.alonso.rrhhapp.models.exceptions.EmailUniqueException;
 import org.alonso.rrhhapp.models.exceptions.EmployeeNotFoundException;
 import org.alonso.rrhhapp.models.exceptions.JobNotFoundException;
 import org.alonso.rrhhapp.models.responses.EmployeeResponse;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -50,9 +52,29 @@ public class EmployeeRestControllerAdvice {
     public ResponseEntity<?> handleMethodArgumentTypeMismatchException(MethodArgumentTypeMismatchException e) {
         EmployeeResponse response = new EmployeeResponse();
         response.setStatusCode(HttpStatus.NOT_FOUND.value());
-        response.setErrors(Arrays.asList(e.getMessage()));
+        response.setErrors(Arrays.asList("The path variable is not valid"));
 
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+    }
+
+    @ExceptionHandler(EmailUniqueException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseEntity<?> handleEmailUniqueException(EmailUniqueException e) {
+        EmployeeResponse response = new EmployeeResponse();
+        response.setStatusCode(HttpStatus.BAD_REQUEST.value());
+        response.setErrors(Arrays.asList(e.getMessage()));
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+    }
+
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseEntity<?> handleDataIntegrityViolationException(DataIntegrityViolationException e) {
+        EmployeeResponse response = new EmployeeResponse();
+        response.setStatusCode(HttpStatus.BAD_REQUEST.value());
+        response.setErrors(Arrays.asList("No duplicate values ​​allowed"));
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
 
     @ExceptionHandler(Exception.class)
