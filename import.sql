@@ -52,6 +52,37 @@ CREATE TABLE employees(
     PRIMARY KEY(id)
 );
 
+CREATE TABLE roles(
+    id INT NOT NULL AUTO_INCREMENT,
+    name VARCHAR(30) NOT NULL,
+
+    PRIMARY KEY(id)
+);
+
+CREATE TABLE users(
+    id INT NOT NULL AUTO_INCREMENT,
+    username VARCHAR(40) NOT NULL UNIQUE,
+    email VARCHAR(100) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL,
+    active TINYINT NOT NULL,
+    google TINYINT NOT NULL,
+    created_at DATETIME NOT NULL,
+    updated_at DATETIME NOT NULL,
+
+    PRIMARY KEY(id)
+);
+
+CREATE TABLE users_roles(
+    user_id INT NOT NULL,
+    role_id INT NOT NULL,
+
+    PRIMARY KEY(user_id, role_id)
+);
+
+ALTER TABLE users_roles ADD CONSTRAINT uk_user_role UNIQUE(user_id, role_id);
+ALTER TABLE users_roles ADD CONSTRAINT fk_user_role FOREIGN KEY(user_id) REFERENCES users(id);
+ALTER TABLE users_roles ADD CONSTRAINT fk_role_user FOREIGN KEY(role_id) REFERENCES roles(id);
+
 ALTER TABLE addresses ADD CONSTRAINT fk_address_city FOREIGN KEY(city_id) REFERENCES cities(id);
 ALTER TABLE jobs ADD CONSTRAINT fk_job_department FOREIGN KEY(department_id) REFERENCES departments(id);
 ALTER TABLE employees ADD CONSTRAINT fk_address_employee FOREIGN KEY(address_id) REFERENCES addresses(id);
@@ -131,3 +162,13 @@ INSERT INTO employees (name, lastname, email, phone, address_id, birthdate, hire
 INSERT INTO employees (name, lastname, email, phone, address_id, birthdate, hiredate, boss_id, job_id) VALUES ('Mia', 'Sanchez', 'mia.sanchez@example.com', '1011010', 18, '1988-12-12', '2022-01-24', 2, 13);
 INSERT INTO employees (name, lastname, email, phone, address_id, birthdate, hiredate, boss_id, job_id) VALUES ('Sophie', 'Gonzalez', 'sophie.gonzalez@example.com', '1112222', 19, '1989-05-12', '2022-01-25', 1, 5);
 INSERT INTO employees (name, lastname, email, phone, address_id, birthdate, hiredate, boss_id, job_id) VALUES ('Jackson', 'Wang', 'jackson.wang@example.com', '3334444', 20, '1991-10-18', '2022-01-26', 2, 11);
+
+INSERT INTO users (username, email, password, active, google, created_at, updated_at) VALUES('admin', 'admin@mail.com', '$2a$12$1yfuob3oWlOqrzSkk1D2G.DujYZaejtO3A.K7Iiy14MmrCqi4QtzW', 1, 0, NOW(), NOW());
+INSERT INTO users (username, email, password, active, google, created_at, updated_at) VALUES('alonso', 'alonso@mail.com', '$2a$12$aEugJucPsYK5cSbVF2Q8IeCWsl3YXiWzjgjjgZ2dQjWaRJkrjBOSS', 1, 0, NOW(), NOW());
+
+INSERT INTO roles(name) VALUES("ROLE_ADMIN");
+INSERT INTO roles(name) VALUES("ROLE_USER");
+
+INSERT INTO users_roles(user_id, role_id) VALUES(1, 1);
+INSERT INTO users_roles(user_id, role_id) VALUES(1, 2);
+INSERT INTO users_roles(user_id, role_id) VALUES(2, 2);

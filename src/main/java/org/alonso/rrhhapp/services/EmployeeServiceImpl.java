@@ -122,7 +122,6 @@ public class EmployeeServiceImpl implements EmployeeService {
         employee.setLastname(updateEmployeeDTO.getLastname());
         employee.setEmail(updateEmployeeDTO.getEmail());
         employee.setPhone(updateEmployeeDTO.getPhone());
-        employee.setBirthdate(formatBirthdate(updateEmployeeDTO.getBirthdate()));
 
         employee = employeeRepository.save(employee);
         return buildEmployee(employee);

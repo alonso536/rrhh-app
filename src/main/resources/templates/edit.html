@@ -26,11 +26,6 @@
                 <input type="number" th:field="*{phone}" class="form-control" id="phone" name="phone">
                 <small class="text-danger" th:if="${errors != null && errors.containsKey('phone')}" th:text="${errors.get('phone')}"></small>
             </div>
-            <div class="mb-3">
-                <label form="name">Birthdate</label>
-                <input type="date" th:field="*{birthdate}" class="form-control" id="birthdate" name="birthdate">
-                <small class="text-danger" th:if="${errors != null && errors.containsKey('birthdate')}" th:text="${errors.get('birthdate')}"></small>
-            </div>
             <button type="submit" class="btn btn-primary" th:text="${title}"></button>
         </form>
     </main>

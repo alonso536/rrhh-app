@@ -16,7 +16,6 @@ public class EmployeeHelper {
                 .lastname(employee.getLastname())
                 .email(employee.getEmail())
                 .phone(employee.getPhone())
-                .birthdate(employee.getBirthdate().toString())
                 .build();
     }
 
