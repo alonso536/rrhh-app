@@ -23,4 +23,5 @@ public class EmployeeDTO {
     private String department;
     private LocalDate birthdate;
     private LocalDate hiredate;
+    private LocalDate firedate;
 }

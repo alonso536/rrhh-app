@@ -48,6 +48,7 @@ public class EmployeeHelper {
                 .department(employee.getJob().getDepartment().getName())
                 .birthdate(employee.getBirthdate())
                 .hiredate(employee.getHiredate())
+                .firedate(employee.getFiredate())
                 .build();
     }
 }
