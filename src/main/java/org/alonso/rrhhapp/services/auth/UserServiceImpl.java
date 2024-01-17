@@ -9,6 +9,7 @@ import org.alonso.rrhhapp.models.entities.Role;
 import org.alonso.rrhhapp.models.entities.UserEntity;
 import org.alonso.rrhhapp.models.exceptions.EmailUniqueException;
 import org.alonso.rrhhapp.models.exceptions.UserNotFoundException;
+import org.alonso.rrhhapp.models.exceptions.UsernameUniqueException;
 import org.alonso.rrhhapp.repositories.RoleRepository;
 import org.alonso.rrhhapp.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,6 +67,9 @@ public class UserServiceImpl implements UserService {
         try {
             user = userRepository.save(user);
         } catch (DataIntegrityViolationException e) {
+            if (e.getMessage().contains("username")) {
+                throw new UsernameUniqueException("The username entered is in use");
+            }
             throw new EmailUniqueException("The email entered is in use");
         }
 
