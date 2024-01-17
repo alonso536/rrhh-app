@@ -1,5 +1,6 @@
 package org.alonso.rrhhapp.controllers.advices;
 
+import java.time.format.DateTimeParseException;
 import java.util.Arrays;
 
 import org.alonso.rrhhapp.models.exceptions.CityNotFoundException;
@@ -73,6 +74,16 @@ public class EmployeeRestControllerAdvice {
         EmployeeResponse response = new EmployeeResponse();
         response.setStatusCode(HttpStatus.BAD_REQUEST.value());
         response.setErrors(Arrays.asList("No duplicate values ​​allowed"));
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+    }
+
+    @ExceptionHandler(DateTimeParseException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseEntity<?> handleDateTimeParseException(DateTimeParseException e) {
+        EmployeeResponse response = new EmployeeResponse();
+        response.setStatusCode(HttpStatus.BAD_REQUEST.value());
+        response.setErrors(Arrays.asList("The field birthdate must be in a correct format"));
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }

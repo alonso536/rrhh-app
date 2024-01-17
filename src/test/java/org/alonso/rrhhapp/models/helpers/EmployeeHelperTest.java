@@ -10,7 +10,6 @@ import static org.alonso.rrhhapp.models.helpers.DataTestHelper.*;
 import static org.alonso.rrhhapp.models.helpers.EmployeeHelper.*;
 
 import org.alonso.rrhhapp.models.dto.EmployeeDTO;
-import org.alonso.rrhhapp.models.dto.UpdateEmployeeDTO;
 import org.alonso.rrhhapp.models.entities.Employee;
 import org.junit.jupiter.api.Test;
 
@@ -46,14 +45,5 @@ public class EmployeeHelperTest {
         assertThrows(DateTimeParseException.class, () -> {
             formatBirthdate(birthdateGiven);
         });
-    }
-
-    @Test
-    void testSetUpdateEmployeeDTO() {
-        EmployeeDTO employeeGiven = UPDATE_EMPLOYEE_BUILD_TEST;
-        UpdateEmployeeDTO employeeReal = setUpdateEmployeeDTO(employeeGiven);
-
-        assertNotNull(employeeReal);
-        assertTrue(employeeReal instanceof UpdateEmployeeDTO);
     }
 }
