@@ -63,7 +63,9 @@ public class SecurityConfig {
                                 "/api/users/page/{page}")
                         .hasAnyRole("ADMIN", "USER")
                         .requestMatchers(HttpMethod.POST, "/api/employees").hasAnyRole("ADMIN")
-                        .requestMatchers("/api/employees/**", "/api/employees/{id}", "/api/users/{id}").hasRole("ADMIN")
+                        .requestMatchers("/api/employees/**", "/api/employees/{id}", "/api/users/{id}",
+                                "/api/employees/jobs", "/api/employees/cities")
+                        .hasRole("ADMIN")
                         .anyRequest().authenticated())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilter(jwtAuthenticationFilter)

@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.alonso.rrhhapp.models.dto.CreateEmployeeDTO;
 import org.alonso.rrhhapp.models.dto.EmployeeDTO;
+import org.alonso.rrhhapp.models.dto.EmployeeMinDTO;
 import org.alonso.rrhhapp.models.dto.UpdateEmployeeDTO;
 import org.alonso.rrhhapp.models.entities.City;
 import org.alonso.rrhhapp.models.entities.Job;
@@ -13,7 +14,7 @@ import org.springframework.data.domain.Pageable;
 public interface EmployeeService {
     List<EmployeeDTO> findAll();
 
-    Page<EmployeeDTO> findAll(Pageable page);
+    Page<EmployeeMinDTO> findAll(Pageable page);
 
     EmployeeDTO save(CreateEmployeeDTO createEmployeeDTO);
 

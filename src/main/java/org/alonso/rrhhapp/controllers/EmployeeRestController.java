@@ -43,7 +43,7 @@ public class EmployeeRestController {
     public ResponseEntity<?> index(@PathVariable Integer page) {
         EmployeeResponse response = new EmployeeResponse();
         response.setStatusCode(HttpStatus.OK.value());
-        response.setPayload(employeeService.findAll(PageRequest.of(page, 8)));
+        response.setPayload(employeeService.findAll(PageRequest.of(page, 12)));
 
         return ResponseEntity.status(HttpStatus.OK.value()).body(response);
     }
@@ -104,6 +104,24 @@ public class EmployeeRestController {
 
         response.setStatusCode(HttpStatus.OK.value());
         response.setPayload(employeeService.delete(id));
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    @GetMapping("/jobs")
+    public ResponseEntity<?> jobs() {
+        EmployeeResponse response = new EmployeeResponse();
+        response.setStatusCode(HttpStatus.OK.value());
+        response.setPayload(employeeService.findJobs());
+
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    @GetMapping("/cities")
+    public ResponseEntity<?> cities() {
+        EmployeeResponse response = new EmployeeResponse();
+        response.setStatusCode(HttpStatus.OK.value());
+        response.setPayload(employeeService.findCities());
+
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 }

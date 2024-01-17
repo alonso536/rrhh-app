@@ -42,7 +42,7 @@ public class UserController {
     public ResponseEntity<?> index(@PathVariable Integer page) {
         EmployeeResponse response = new EmployeeResponse();
         response.setStatusCode(HttpStatus.OK.value());
-        response.setPayload(userService.findAll(PageRequest.of(page, 1)));
+        response.setPayload(userService.findAll(PageRequest.of(page, 10)));
 
         return ResponseEntity.status(HttpStatus.OK.value()).body(response);
     }
@@ -81,7 +81,7 @@ public class UserController {
         response.setStatusCode(HttpStatus.OK.value());
         response.setPayload(userService.checkAuth(token));
 
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     @GetMapping("/{id}")
