@@ -59,10 +59,11 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.POST, "/api/users/register").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/employees", "/api/employees/{id}",
-                                "/api/employees/page/{page}", "/api/users", "/api/users/{id}", "/api/users/page/{page}")
+                                "/api/employees/page/{page}", "/api/users", "/api/users/check", "/api/users/{id}",
+                                "/api/users/page/{page}")
                         .hasAnyRole("ADMIN", "USER")
                         .requestMatchers(HttpMethod.POST, "/api/employees").hasAnyRole("ADMIN")
-                        .requestMatchers("/api/employees/**").hasRole("ADMIN")
+                        .requestMatchers("/api/employees/**", "/api/employees/{id}", "/api/users/{id}").hasRole("ADMIN")
                         .anyRequest().authenticated())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilter(jwtAuthenticationFilter)

@@ -4,6 +4,7 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -28,6 +29,7 @@ public class UpdateEmployeeDTO {
     private String email;
 
     @NotNull(message = "The field phone is required")
+    @Size(min = 7, max = 15, message = "The field phone must be between 7 and 15 digits")
     @Pattern(regexp = "^[0-9]+$", message = "The field phone must be a number")
     private String phone;
 }

@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 
 @RestController
@@ -41,7 +42,7 @@ public class UserController {
     public ResponseEntity<?> index(@PathVariable Integer page) {
         EmployeeResponse response = new EmployeeResponse();
         response.setStatusCode(HttpStatus.OK.value());
-        response.setPayload(userService.findAll(PageRequest.of(page, 8)));
+        response.setPayload(userService.findAll(PageRequest.of(page, 1)));
 
         return ResponseEntity.status(HttpStatus.OK.value()).body(response);
     }
@@ -70,6 +71,17 @@ public class UserController {
         response.setStatusCode(HttpStatus.CREATED.value());
         response.setPayload(userService.save(createUserDTO));
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
+    @GetMapping("/check")
+    public ResponseEntity<?> check(HttpServletRequest request) {
+        EmployeeResponse response = new EmployeeResponse();
+        String token = request.getHeader("Authorization").substring(7);
+
+        response.setStatusCode(HttpStatus.OK.value());
+        response.setPayload(userService.checkAuth(token));
+
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
     }
 
     @GetMapping("/{id}")

@@ -7,6 +7,7 @@ import java.util.Map;
 
 import org.alonso.rrhhapp.security.jwt.JwtUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -55,10 +56,10 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
             filterChain.doFilter(request, response);
         } catch (JwtException e) {
             Map<String, Object> httpResponse = new HashMap<>();
-            httpResponse.put("errors", Arrays.asList("Token inválido"));
+            httpResponse.put("errors", Arrays.asList("Invalid token"));
 
             response.getWriter().write(new ObjectMapper().writeValueAsString(httpResponse));
-            response.setStatus(401);
+            response.setStatus(HttpStatus.UNAUTHORIZED.value());
             response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         }
 

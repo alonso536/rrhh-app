@@ -7,15 +7,19 @@ import org.alonso.rrhhapp.models.exceptions.CityNotFoundException;
 import org.alonso.rrhhapp.models.exceptions.EmailUniqueException;
 import org.alonso.rrhhapp.models.exceptions.EmployeeNotFoundException;
 import org.alonso.rrhhapp.models.exceptions.JobNotFoundException;
+import org.alonso.rrhhapp.models.exceptions.UserNotFoundException;
 import org.alonso.rrhhapp.models.exceptions.UsernameUniqueException;
 import org.alonso.rrhhapp.models.responses.EmployeeResponse;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+
+import io.jsonwebtoken.JwtException;
 
 @RestControllerAdvice
 public class EmployeeRestControllerAdvice {
@@ -49,14 +53,24 @@ public class EmployeeRestControllerAdvice {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
     }
 
-    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    @ExceptionHandler(UserNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ResponseEntity<?> handleMethodArgumentTypeMismatchException(MethodArgumentTypeMismatchException e) {
+    public ResponseEntity<?> handleUserNotFoundException(UserNotFoundException e) {
         EmployeeResponse response = new EmployeeResponse();
         response.setStatusCode(HttpStatus.NOT_FOUND.value());
-        response.setErrors(Arrays.asList("The path variable is not valid"));
+        response.setErrors(Arrays.asList(e.getMessage()));
 
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+    }
+
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseEntity<?> handleMethodArgumentTypeMismatchException(MethodArgumentTypeMismatchException e) {
+        EmployeeResponse response = new EmployeeResponse();
+        response.setStatusCode(HttpStatus.BAD_REQUEST.value());
+        response.setErrors(Arrays.asList("The path variable is not valid"));
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
 
     @ExceptionHandler(EmailUniqueException.class)
@@ -97,6 +111,26 @@ public class EmployeeRestControllerAdvice {
         response.setErrors(Arrays.asList("The field birthdate must be in a correct format"));
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+    }
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseEntity<?> handleHttpMessageNotReadableException(HttpMessageNotReadableException e) {
+        EmployeeResponse response = new EmployeeResponse();
+        response.setStatusCode(HttpStatus.BAD_REQUEST.value());
+        response.setErrors(Arrays.asList("The value entered is not valid"));
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+    }
+
+    @ExceptionHandler(JwtException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    public ResponseEntity<?> handleJwtException(JwtException e) {
+        EmployeeResponse response = new EmployeeResponse();
+        response.setStatusCode(HttpStatus.UNAUTHORIZED.value());
+        response.setErrors(Arrays.asList(e.getMessage()));
+
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
     }
 
     @ExceptionHandler(Exception.class)

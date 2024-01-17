@@ -2,8 +2,14 @@ package org.alonso.rrhhapp.security.jwt;
 
 import java.security.Key;
 import java.util.Date;
+import java.util.List;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
+import org.alonso.rrhhapp.models.entities.UserEntity;
+import org.alonso.rrhhapp.models.exceptions.UserNotFoundException;
+import org.alonso.rrhhapp.repositories.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -17,6 +23,10 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 @Slf4j
 public class JwtUtils {
+
+    @Autowired
+    private UserRepository userRepository;
+
     @Value("${jwt.secret.key}")
     private String secretKey;
 
@@ -24,7 +34,20 @@ public class JwtUtils {
     private String timeExpiration;
 
     public String generateAccessToken(String username) {
+        UserEntity user = userRepository.findUserByUsername(username)
+                .orElseThrow(() -> new UserNotFoundException("The user entered is not found"));
+
+        List<String> roles = user.getRoles().stream().map((role) -> role.getName()).collect(Collectors.toList());
+        boolean isAdmin = roles.stream().anyMatch(role -> role.equals("ROLE_ADMIN"));
+
+        Claims claims = Jwts.claims();
+        claims.put("authorities", roles);
+        claims.put("isAdmin", isAdmin);
+        claims.put("username", username);
+        claims.put("email", user.getEmail());
+
         return Jwts.builder()
+                .setClaims(claims)
                 .setSubject(username)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + Long.parseLong(timeExpiration)))
@@ -42,7 +65,7 @@ public class JwtUtils {
 
             return true;
         } catch (Exception e) {
-            log.error("Token inválido. Error: " + e.getMessage());
+            log.error("Invalid token. Error: " + e.getMessage());
             return false;
         }
     }
